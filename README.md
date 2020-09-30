@@ -1,6 +1,12 @@
 # Wordscapes Helper
 
 ## Usage
+### Invocation
+`python wordscapes-helper.py`
+
+Press Ctrl-C to quit
+
+### Example Run
 ```
 $ python wordscapes-helper.py
 word pool: rmeguo
@@ -13,7 +19,7 @@ word pool: Traceback (most recent call last):
   File ".\wordscapes-helper.py", line 11, in main
     word_pool = input('word pool: ')
 KeyboardInterrupt
-PS C:\Users\garre\git\wordscapes-helper>
+$
 ```
 
 ## words_alpha.txt
