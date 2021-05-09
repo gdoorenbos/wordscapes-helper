@@ -1,47 +1,35 @@
 import argparse
-import sys
 
 with open("words_alpha.txt") as word_file:
     english_words = set(word.strip().lower() for word in word_file)
 
-def is_english_word(word):
-    return word.lower() in english_words
+def main(pool, word_len, clue=None):
+    # fix up clue
+    if clue is None:
+        clue = '_' * word_len
+    clue = clue.lower()
 
-def main(word_pool, word_len, word_hint=None):
-    if word_hint is None:
-        word_hint = '_' * word_len
-    word_hint = word_hint.lower()
+    # start with words of correct length
+    words = [w for w in english_words if len(w) == word_len]
 
-    matches = []
-    for word in english_words:
-        if len(word) == word_len:
-            word_fits = True
-            for i in range(word_len):
-                if word[i] not in word_pool:
-                    word_fits = False
-                    break
-                if word_hint[i] != '_' and word_hint[i] != word[i]:
-                    word_fits = False
-                    break
+    # filter out words with letters not in the pool
+    words = [w for w in words if all(l in pool for l in w)]
 
-            if word_fits:
-                for letter in word:
-                    letter_count = len([x for x in word if x == letter])
-                    pool_count = len([x for x in word_pool if x == letter])
-                    if letter_count > pool_count:
-                        word_fits = False
-                        break
+    # filter out words that have more letters than available in the pool
+    words = [w for w in words if all(w.count(l) <= pool.count(l) for l in w)]
 
-                if word_fits:
-                    matches.append(word)
+    # filter out words that dont match the clue
+    words = [w for w in words if all(h in ('_', l) for h, l in zip(clue, w))]
 
-    print('matches: {}'.format(matches))
+    # done. return sorted results
+    return sorted(words)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--letter-pool', required=True, type=str)
     parser.add_argument('-l', '--word-length', required=True, type=int)
-    parser.add_argument('-k', '--hints', type=str)
+    parser.add_argument('-c', '--clue', type=str)
     args = parser.parse_args()
 
-    main(args.letter_pool, args.word_length, args.hints)
+    matches = main(args.letter_pool, args.word_length, args.clue)
+    print('matches: {}'.format(matches))
