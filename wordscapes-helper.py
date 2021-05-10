@@ -1,4 +1,5 @@
 import argparse
+import itertools
 
 with open("words_alpha.txt") as word_file:
     english_words = set(word.strip().lower() for word in word_file)
@@ -24,29 +25,14 @@ def solve_old(pool, word_len, clue=None):
     # done. return sorted results
     return sorted(words)
 
-def get_combs(comblen, pool, start=''):
-    if comblen == 1:
-        combs = []
-        for letter in pool:
-            combs.append(start + letter)
-        return combs
-
-    combs = []
-    for i, e in enumerate(pool):
-        nustart = start + e
-        nupool = [x for j, x in enumerate(pool) if i != j]
-        combs += get_combs(comblen - 1, nupool, nustart)
-
-    return combs
-
 def solve_new(pool, word_len, clue=None):
     # fix up clue
     if clue is None:
         clue = '_' * word_len
     clue = clue.lower()
 
-    # find all letter combinations of desired length
-    words = get_combs(word_len, pool)
+    # find all letter permutations of desired length
+    words = [''.join(p) for p in itertools.permutations(pool, word_len)]
 
     # filter out words that arent english
     words = [w for w in words if w in english_words]
