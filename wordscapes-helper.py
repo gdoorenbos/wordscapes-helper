@@ -32,7 +32,7 @@ def solve_new(pool, word_len, clue=None):
     clue = clue.lower()
 
     # find all letter permutations of desired length
-    words = [''.join(p) for p in itertools.permutations(pool, word_len)]
+    words = {''.join(p) for p in itertools.permutations(pool, word_len)}
 
     # filter out words that arent english
     words = [w for w in words if w in english_words]
