@@ -43,6 +43,10 @@ def solve_new(pool, word_len, clue=None):
     # return sorted words
     return sorted(words)
 
+def print_solution(words):
+    for word in sorted(words):
+        print(word)
+
 def solve(pool, word_len, clue=None):
     #return solve_old(pool, word_len, clue)
     return solve_new(pool, word_len, clue)
@@ -55,5 +59,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     matches = solve(args.letter_pool, args.word_length, args.clue)
-    print('matches: {}'.format(matches))
+    print('matches:')
+    print_solution(matches)
 
